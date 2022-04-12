@@ -1,10 +1,17 @@
 import React from 'react';
 
 import {
-	Panel, PanelHeader, Header, Button, Group, Cell, Div, Avatar,
+	Panel,
+	PanelHeader,
+	Header,
+	Button,
+	Group,
+	Cell,
+	Div,
+	Avatar,
 } from '@vkontakte/vkui';
 
-const Home = ({ id, go, fetchedUser }) => (
+const Home = ({ id, fetchedUser }) => (
 	<Panel id={id}>
 		<PanelHeader>Example</PanelHeader>
 		{fetchedUser &&
@@ -19,7 +26,7 @@ const Home = ({ id, go, fetchedUser }) => (
 
 		<Group header={<Header mode="secondary">Navigation Example</Header>}>
 			<Div>
-				<Button stretched size="l" mode="secondary" onClick={go} data-to="persik">
+				<Button stretched size="l" mode="secondary" onClick={() => console.log('xxx')} data-to="persik">
 					Show me the Persik, please
 				</Button>
 			</Div>

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+
 import bridge from '@vkontakte/vk-bridge';
 import {
 	View,
@@ -11,10 +13,18 @@ import '@vkontakte/vkui/dist/vkui.css';
 import Home from './panels/Home';
 import Persik from './panels/Persik';
 
+import Menu from './panels/Menu';
+import Wallet from './panels/Wallet';
+import Transaction from './panels/Transaction';
+import History from './panels/History';
+import Settings from './panels/Settings';
+import Vault from './panels/Vault';
+
 const App = () => {
-	const [activePanel, setActivePanel] = useState('home');
+	const activePanel = useSelector((state) => state.panel.panel);
 	const [fetchedUser, setUser] = useState(null);
 	const [popout, setPopout] = useState(<ScreenSpinner size="large" />);
+	console.log(typeof popout, activePanel);
 
 	useEffect(() => {
 		bridge.subscribe(({ detail: { type, data } }) => {
@@ -32,16 +42,18 @@ const App = () => {
 		fetchData();
 	}, []);
 
-	const go = (e) => {
-		setActivePanel(e.currentTarget.dataset.to);
-	};
-
 	return (
 		<AdaptivityProvider>
 			<AppRoot>
-				<View activePanel={activePanel} popout={popout}>
-					<Home id="home" fetchedUser={fetchedUser} go={go} />
-					<Persik id="persik" go={go} />
+				<View activePanel={activePanel} popout={null}>
+					<Home id="home" fetchedUser={fetchedUser} />
+					<Persik id="persik" />
+					<Menu id="menu" />
+					<Wallet id="wallet" />
+					<Transaction id="transaction" />
+					<History id="history" />
+					<Settings id="settings" />
+					<Vault id="vault" />
 				</View>
 			</AppRoot>
 		</AdaptivityProvider>
@@ -49,3 +61,7 @@ const App = () => {
 };
 
 export default App;
+
+// const go = (e) => {
+// 	setActivePanel(e.currentTarget.dataset.to);
+// };

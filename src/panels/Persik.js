@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import { Panel, PanelHeader, PanelHeaderBack } from '@vkontakte/vkui';
 
 import persik from '../img/persik.png';
-import './Persik.css';
+// import './Persik.css';
 
 const Persik = (props) => (
 	<Panel id={props.id}>
 		<PanelHeader
-			left={<PanelHeaderBack onClick={props.go} data-to="home" />}
+			left={<PanelHeaderBack onClick={console.log('adawd')} data-to="home" />}
+			// left={<PanelHeaderBack onClick={props.go} data-to="home" />}
 		>
 			Persik
 		</PanelHeader>
@@ -19,7 +20,7 @@ const Persik = (props) => (
 
 Persik.propTypes = {
 	id: PropTypes.string.isRequired,
-	go: PropTypes.func.isRequired,
+	// go: PropTypes.func.isRequired,
 };
 
 export default Persik;
