@@ -22,7 +22,6 @@ import { setPanel } from '../features/panel/panelSlice';
 
 const Menu = (props) => {
 	const menuList = useSelector((state) => state.panel.panels);
-	console.log({ menuList });
 	const dispatch = useDispatch();
 
 	return (

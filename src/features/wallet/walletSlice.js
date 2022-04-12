@@ -1,9 +1,34 @@
 import Web3 from 'web3';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+let web3 = null;
+let userWallet = null;
+
+export const requestTokens = createAsyncThunk('wallet/addTokens',
+    async (address) => {
+        const balance = await web3.eth.getBalance(address);
+        return balance;
+    },
+);
+export const fetchBalance = createAsyncThunk('wallet/fetchBalance',
+    async (address) => {
+        const balance = await web3.eth.getBalance(address);
+        return balance;
+    },
+);
+export const createWallet = createAsyncThunk('wallet/createWallet',
+    async () => {
+        const newWallet = await web3.eth.accounts.create();
+        userWallet = newWallet;
+        return true;
+    },
+);
 
 export const walletSlice = createSlice({
     name: 'wallet',
     initialState: {
+        isLoading: false,
+        error: null,
         wallet: null,
         wallets: {},
         provider: 'infura',
@@ -22,9 +47,9 @@ export const walletSlice = createSlice({
             // binanceTestnet: { blockchain: 'Binance', logo: '' },
         },
         history: [], // {transactionHash, from, to, value}
-        balance: 0,
+        balance: null,
         connectionString: 'https://rinkeby.infura.io/v3/3c32cdd37b124fed85037dd52f7a70c5',
-        web3: null,
+        web3IsOn: false,
     },
 
     reducers: {
@@ -40,23 +65,37 @@ export const walletSlice = createSlice({
                 .replace(/ID/gm, state.providers[state.provider].projectId)
                 .replace(/NETWORK/gm, state.network);
         },
-        setBalance: (state, action) => {
-            state.balance = +action.payload;
-        },
         addToHistory: (state, action) => {
             const isExist = state.history
                 .filter((event) => event.transactionHash === action.payload.transactionHash);
             if (!isExist) state.history.push(action.payload);
         },
-        addWallet: (state, action) => {
-            // publicKey: secretKey
-            state.wallets[action.payload.publicKey] = action.payload.secretKey;
-        },
-        selectWallet: (state, action) => {
-            state.wallet = state.wallets[action.payload.publicKey];
-        },
+        // selectWallet: (state, action) => {
+        //     state.wallet = state.wallets[action.payload];
+        // },
         connect: (state) => {
-            state.web3 = new Web3(state.connectionString);
+            web3 = new Web3(state.connectionString);
+            if (web3) state.web3IsOn = true;
+        },
+    },
+    extraReducers: {
+        [fetchBalance.pending]: (state) => { state.isLoading = true; },
+        [fetchBalance.fulfilled]: (state, action) => {
+            state.balance = action.payload;
+            state.isLoading = false;
+        },
+        [fetchBalance.rejected]: (state) => {
+            state.error = true;
+            state.isLoading = false;
+        },
+        [createWallet.pending]: (state) => { state.isLoading = true; },
+        [createWallet.fulfilled]: (state) => {
+            state.wallet = { address: userWallet.address, privateKey: userWallet.privateKey };
+            state.isLoading = false;
+        },
+        [createWallet.rejected]: (state) => {
+            state.isLoading = false;
+            state.error = true;
         },
     },
 });
@@ -65,7 +104,6 @@ export const {
     selectNetwork,
     setBalance,
     addToHistory,
-    addWallet,
     selectWallet,
     selectProvider,
     connect,

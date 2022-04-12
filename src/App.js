@@ -22,9 +22,8 @@ import Vault from './panels/Vault';
 
 const App = () => {
 	const activePanel = useSelector((state) => state.panel.panel);
+	const isLoading = useSelector((state) => state.wallet.isLoading);
 	const [fetchedUser, setUser] = useState(null);
-	const [popout, setPopout] = useState(<ScreenSpinner size="large" />);
-	console.log(typeof popout, activePanel);
 
 	useEffect(() => {
 		bridge.subscribe(({ detail: { type, data } }) => {
@@ -37,7 +36,7 @@ const App = () => {
 		async function fetchData() {
 			const user = await bridge.send('VKWebAppGetUserInfo');
 			setUser(user);
-			setPopout(null);
+			// setPopout(null);
 		}
 		fetchData();
 	}, []);
@@ -45,7 +44,7 @@ const App = () => {
 	return (
 		<AdaptivityProvider>
 			<AppRoot>
-				<View activePanel={activePanel} popout={null}>
+				<View activePanel={activePanel} popout={isLoading && <ScreenSpinner size="large" />}>
 					<Home id="home" fetchedUser={fetchedUser} />
 					<Persik id="persik" />
 					<Menu id="menu" />
