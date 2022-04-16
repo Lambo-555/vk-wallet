@@ -14,6 +14,7 @@ module.exports = {
   },
   plugins: ['react'],
   rules: {
+    'max-len': 0,
     'no-console': 0,
     'react/jsx-closing-tag-location': 0,
     'function-paren-newline': 0,

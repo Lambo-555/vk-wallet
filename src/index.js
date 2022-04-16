@@ -13,3 +13,7 @@ ReactDOM.render(
   </Provider>,
   document.getElementById('root'),
 );
+
+if (process.env.NODE_ENV === 'development') {
+  import('./eruda').then(({ default: eruda }) => { console.log('erudaIsOn: ', !!eruda); }); // runtime download
+}
