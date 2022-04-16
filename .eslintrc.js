@@ -29,5 +29,6 @@ module.exports = {
     'react/jsx-indent': 0,
     'no-param-reassign': 0,
     'react/jsx-indent-props': 0,
+    'object-curly-newline': 0,
   },
 };
